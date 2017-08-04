@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>驾车导航</title><script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=FujWINKwnU2VqDYaCtz3kBdK"></script> 
+
+<script type="text/javascript" src="http://webmap2.map.bdstatic.com/wolfman/static/common/js/libs/mod_b0ef1b5.js"></script> 
+
+</head>
+<body>
+  <div class="maps" id="allmap" style="width:100%; min-height:500px;"></div>
+<script>
+var local="上海市";        // 定义本地地址；  
+   var myGeo = new BMap.Geocoder(); // 创建地址解析器实例  
+    myGeo.getPoint("上海市东方体育中心", function(point){  
+    if (point) {                    //如果地址能解析，标记  
+        // add_flag1(point);  
+		   console.log(point);
+               }else{  
+            alert("地址无法找到!");  
+                    }  
+                    },local);  
+
+
+var map = new BMap.Map("allmap");
+var point = new BMap.Point(116.331398,39.897445);
+map.centerAndZoom(point,12);
+function myFun(result){
+    var cityName = result.name;
+    map.setCenter(cityName);   //关于setCenter()可参考API文档---”传送门“
+    alert(cityName);
+}
+var myCity = new BMap.LocalCity();
+myCity.get(myFun); 
+var lonstr;
+var latstr;	
+if (!supportsGeoLocation()) {
+	alert("不支持 GeoLocation.");
+}
+// 检测浏览器是否支持HTML5
+// 页面加载时执行getLocation函数
+window.onload = getLocation;
+function supportsGeoLocation() {
+	return !! navigator.geolocation;
+}
+// 单次位置请求执行的函数             
+function getLocation() {
+	/* navigator.geolocation.getCurrentPosition(mapIt, locationError); */
+	
+	var geolocation=new BMap.Geolocation();
+	var map=new BMap.Map("allmap");
+	var end="";
+	var start="";
+	var address="";//地理位置
+	var aroundCity="";
+	var endPoint=""//终点坐标
+	geolocation.getCurrentPosition(function(r){
+		  
+		  if(this.getStatus()==BMAP_STATUS_SUCCESS){
+			lonstr = r.point.lng;
+			latstr = r.point.lat;
+			var mk=new BMap.Marker(r.point);
+			//map.addOverlay(mk);
+		    map.panTo(r.point);
+		    var point = new BMap.Point(r.point.lng,r.point.lat);
+			map.centerAndZoom(point, 19);
+			var marker = new BMap.Marker(point);//创建标注
+			//map.addOverlay(marker); // 将标注添加到地图中
+			map.setCenter(point);
+			var gc = new BMap.Geocoder();
+			//alert('你的当前坐标是lonstr='+lonstr+'latstr='+latstr);
+			var sContent="";
+			//根据坐标获取文字地理位置信息
+			gc.getLocation(point,function(rs) {
+				
+				var addComp = rs.addressComponents;
+				if (addComp.province !== addComp.city) {
+					 sContent = "<div><h4>你当前的位置是：</h4>" + "<p style='margin:0;line-height:1.5;font-size:12px;text-indent:2em'>" + addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + "</p>" + "</div>";
+				     address= addComp.province   + addComp.city   + addComp.district  + addComp.street;
+					 aroundCity=addComp.province;
+				} else {
+					 sContent = "<div><h4>你当前的位置是：</h4>" + "<p style='margin:0;line-height:1.5;font-size:12px;text-indent:2em'>" + addComp.city + ", " + addComp.district + ", " + addComp.street + "</p>" + "</div>";
+					 address=  addComp.city   + addComp.district  + addComp.street;
+					 aroundCity=addComp.city;
+				}
+				
+				//显示天气
+				
+				var url="http://api.map.baidu.com/telematics/v3/weather?location="+aroundCity+"&output=json&ak=FujWINKwnU2VqDYaCtz3kBdK&callback=?";
+				console.log(url);
+				$.ajax({
+				 type : "get", 
+				 async:false,
+				 url : url,
+				 dataType : "json",			 
+				 success : function(json){ 
+				   var show=json.results[0].currentCity+json.results[0].pm25+json.results[0].weather_data[0].date;
+				   alert(show);
+				 }
+				});
+				
+				
+				start=address;
+				end="东方体育中心";
+				//alert(start+end);
+				// 创建地址解析器实例
+				
+				// 将地址解析结果显示在地图上,并调整地图视野
+				gc.getPoint(end, function(point2){
+				if (point2) {
+					  endPoint=point2;
+					    var output = "从"+start+"到"+end+"坐公交需要";
+						var searchComplete = function (results){
+						if (transit.getStatus() != BMAP_STATUS_SUCCESS){
+							return ;
+						}
+						var plan = results.getPlan(0);
+						output += plan.getDuration(true) + "\n";  //获取时间
+						output += plan.getDistance(true) + "\n";  //获取距离
+	   
+						}
+					  	var transit = new BMap.TransitRoute(map, {renderOptions: {map: map},
+						onSearchComplete: searchComplete,
+						onPolylinesSet: function(){        
+						setTimeout(function(){alert(output)},"1000");
+						}});
+						
+				      transit.search(point, endPoint);
+					  	var myIcon = new BMap.Icon("http://developer.baidu.com/map/jsdemo/img/location.gif", new BMap.Size(14,23));
+					//设置起终点图标
+					transit.setMarkersSetCallback(function(result){
+					result[0].marker.setIcon(myIcon);
+					var infoWindow = new BMap.InfoWindow(sContent);//创建信息窗口
+					map.openInfoWindow(infoWindow, point);//开启信息窗口
+					//点击标注打开信息window
+					result[0].marker.addEventListener("click",function(e){
+					map.openInfoWindow(infoWindow,point); //开启信息窗口
+				    });
+					
+					result[1].marker.setIcon(myIcon);		
+					
+				})
+				//map.centerAndZoom(point, 12);
+				
+				}else{
+					  alert("您选择地址没有解析到结果!");
+				}
+				},aroundCity);
+			});
+			
+		  }else{
+			  
+			  alert("falid="+this.getStatus());
+		  }
+		  
+	},{enableHighAccuracy:true});
+	
+	}
+
+</script>
+</body>
+</html>
