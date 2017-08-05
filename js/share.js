@@ -25,8 +25,9 @@ var qq = UA.split('MQQBrowser/').length > 1 ? 2 : 0;
  */
 var wx = /micromessenger/i.test(UA);
 if(!wx){
-	wxConfig();
 	$(".share").show();
+}else{
+	wxConfig();
 }
 /**
  * 浏览器版本
