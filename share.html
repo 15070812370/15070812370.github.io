@@ -53,12 +53,23 @@
         nativeShare.setShareData(shareData)
 
         function call(command) {
-            try {
-                nativeShare.call(command)
-            } catch (err) {
-                // 如果不支持，你可以在这里做降级处理
-                alert(err.message)
-            }
+			var bLevel = {
+				qq: {forbid: 0, lower: 1, higher: 2},
+				uc: {forbid: 0, allow: 1}
+			};
+			var UA = navigator.appVersion;
+			var isqqBrowser = (UA.split("MQQBrowser/").length > 1) ? bLevel.qq.higher : bLevel.qq.forbid;
+			var isucBrowser = (UA.split("UCBrowser/").le
+			if (isucBrowser||isqqBrowser) {
+				try {
+					nativeShare.call(command)
+				} catch (err) {
+					// 如果不支持，你可以在这里做降级处理
+					alert(err.message)
+				}
+			}else{
+			    alert("只支持原生的UC和QQ浏览器")
+			}
         }
     </script>
 </body>
