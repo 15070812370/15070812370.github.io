@@ -190,10 +190,6 @@ function mShare(config) {
     }
 }
 function wxConfig(){
-	var appid;
-	var timestamp;
-	var noncestr;
-	var signature;
 	var url=document.location.protocol + '//' + document.location.host + document.location.pathname + document.location.search;
 	$.ajax({
 		 type: "POST",
@@ -201,11 +197,11 @@ function wxConfig(){
 		 url: "http://bakpr.ezhiyang.com/anon/getWxConfig",
 		 data:{url:url},
 		 success: function(data){
-			 appid=data.appid;
-			 timestamp=data.timestamp;
-			 noncestr=data.noncestr;
-			 signature=data.signature;
-			 init();
+			 var appid=data.appid;
+			 var timestamp=data.timestamp;
+			 var noncestr=data.noncestr;
+			 var signature=data.signature;
+			 init(appid,timestamp,noncestr,signature);
 		 }, error: function (jqXHR, textStatus, errorThrown) {
 			 console.log("接口异常");
 		 }
