@@ -172,15 +172,17 @@ function mShare(config) {
     this.config = config;
 
     this.init = function (type) {
-        if (typeof type != 'undefined') this.config.type = type;
-
+        if (typeof type != 'undefined') 
+			this.config.type = type;
         try {
             if (uc) {
                 ucShare(this.config);
             } else if (qq && !wx) {
                 qqShare(this.config);
             }else{
-				alert("目前只支持uc和QQ原生浏览器");
+				this.config.type = 0;
+				ucShare(this.config);
+				//alert("目前只支持uc和QQ原生浏览器");
 			}
         } catch (e) {}
     }
