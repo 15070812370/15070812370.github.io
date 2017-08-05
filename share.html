@@ -1,61 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<meta name="description" content="fx">
-<title>demo</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<title>Document</title>
 <style>
-	html,
-	body {
-		height: 100%;
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-align: center;
-		-ms-flex-align: center;
-		align-items: center;
-	}
-
-	button {
-		padding: 15px;
-	}
+    button {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
 </style>
 </head>
 <body>
-<div>
-	<button onclick="call('wechatFriend')">微信分享</button>
-</div>
-<script type="text/javascript" src="js/NativeShare.js"></script>
+<button data-mshare="0">点击弹出原生分享面板</button>
+<button data-mshare="1">点击触发朋友圈分享</button>
+<button data-mshare="2">点击触发发送给微信朋友</button>
+<script src="js/jquery-2.1.0.min.js"></script>
+<script src="js/share.js"></script>
 <script>
-	var nativeShare = new NativeShare()
-	var img=document.location.protocol + '//' + document.location.host +'/img/logo.png'
-	var shareData = {
-		title: '我的天',
-		desc: '发贺卡送给好的咖啡机粉红色的金卡',
-		// 如果是微信该link的域名必须要在微信后台配置的安全域名之内的。
-		link: window.location.href,
-		icon: img,
-		// 不要过于依赖以下两个回调，很多浏览器是不支持的
-		success: function() {
-			//alert('success')
-		},
-		fail: function() {
-			//alert('fail')
-		}
-	}
-	nativeShare.setShareData(shareData)
-	function call(command) {
-		try {
-			nativeShare.call(command); //需要处理
-			
-		}
-		catch (err) {
-			alert(err.message);
-			// 如果不支持，你可以在这里做降级处理
-			nativeShare.call();
-		}
-	}
+var img=document.location.protocol + '//' + document.location.host +'/img/logo.png'
+var mshare = new mShare({
+    title: '什么东西',
+    url: 'window.location.href',
+    desc: '我就试试看',
+    img: img
+});
+$('button').click(function () {
+    // 1 ==> 朋友圈  2 ==> 朋友  0 ==> 直接弹出原生
+    mshare.init(+$(this).data('mshare'));
+});
 </script>
 </body>
 </html>
