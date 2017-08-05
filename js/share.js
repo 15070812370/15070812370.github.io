@@ -24,9 +24,8 @@ var qq = UA.split('MQQBrowser/').length > 1 ? 2 : 0;
  * 是否是微信
  */
 var wx = /micromessenger/i.test(UA);
-alert(wx);
 if(!wx){
-	alert(wx);
+	wxConfig();
 	$(".share").show();
 }
 /**
