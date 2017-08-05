@@ -1,77 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <meta name="description" content="fx">
-    <title>demo</title>
-    <style>
-        html,
-        body {
-            height: 100%;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-align: center;
-            -ms-flex-align: center;
-            align-items: center;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<meta name="description" content="fx">
+<title>demo</title>
+<style>
+	html,
+	body {
+		height: 100%;
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+	}
 
-        button {
-            padding: 15px;
-        }
-    </style>
+	button {
+		padding: 15px;
+	}
+</style>
 </head>
-
 <body>
-    <div>
-        <button onclick="call()">通用分享</button>
-        <button onclick="call('wechatFriend')">微信好友</button>
-        <button onclick="call('wechatTimeline')">朋友圈</button>
-        <button onclick="call('qqFriend')">QQ</button>
-        <button onclick="call('qZone')">QQ空间</button>
-        <button onclick="call('weibo')">微博</button>
-    </div>
-    <script type="text/javascript" src="js/NativeShare.js"></script>
-    <script>
-        var nativeShare = new NativeShare()
-		var img=document.location.protocol + '//' + document.location.host +'/img/logo.png'
-        var shareData = {
-            title: '我的天',
-            desc: '发贺卡送给好的咖啡机粉红色的金卡',
-            // 如果是微信该link的域名必须要在微信后台配置的安全域名之内的。
-            link: 'http://bak.ezhiyang.com/site/ezhiyang/index.html',
-            icon: img,
-            // 不要过于依赖以下两个回调，很多浏览器是不支持的
-            success: function() {
-                alert('success')
-            },
-            fail: function() {
-                alert('fail')
-            }
-        }
-        nativeShare.setShareData(shareData)
+<div>
+	<button onclick="call()">通用分享</button>
+	<button onclick="call('wechatFriend')">微信好友</button>
+	<button onclick="call('wechatTimeline')">朋友圈</button>
+	<button onclick="call('qqFriend')">QQ</button>
+	<button onclick="call('qZone')">QQ空间</button>
+	<button onclick="call('weibo')">微博</button>
+</div>
+<script type="text/javascript" src="js/NativeShare.js"></script>
+<script>
+	var nativeShare = new NativeShare()
+	var img=document.location.protocol + '//' + document.location.host +'/img/logo.png'
+	var shareData = {
+		title: '我的天',
+		desc: '发贺卡送给好的咖啡机粉红色的金卡',
+		// 如果是微信该link的域名必须要在微信后台配置的安全域名之内的。
+		link: 'http://bak.ezhiyang.com/site/ezhiyang/index.html',
+		icon: img,
+		// 不要过于依赖以下两个回调，很多浏览器是不支持的
+		success: function() {
+			//alert('success')
+		},
+		fail: function() {
+			//alert('fail')
+		}
+	}
+	nativeShare.setShareData(shareData)
 
-        function call(command) {
-			var bLevel = {
-				qq: {forbid: 0, lower: 1, higher: 2},
-				uc: {forbid: 0, allow: 1}
-			};
-			var UA = navigator.appVersion;
-			var isqqBrowser = (UA.split("MQQBrowser/").length > 1) ? bLevel.qq.higher : bLevel.qq.forbid;
-			var isucBrowser = (UA.split("UCBrowser/").length > 1) ? bLevel.uc.higher : bLevel.uc.forbid;
-			
-			if (isucBrowser||isqqBrowser) {
-				try {
-					nativeShare.call(command)
-				} catch (err) {
-					// 如果不支持，你可以在这里做降级处理
-					alert(err.message)
-				}
+	function call(command) {
+		try {
+			if(command=='wechatFriend'||command=='wechatTimeline'){
+				nativeShare.call(command); //需要处理
 			}else{
-			    alert("只支持原生的UC和QQ浏览器")
+				nativeShare.call(command);
 			}
-        }
-    </script>
+		}
+		catch (err) {
+			// 如果不支持，你可以在这里做降级处理
+			if(command=='wechatFriend'||command=='wechatTimeline'){
+				alert(err.message)；
+			}
+		}
+	}
+</script>
 </body>
 </html>
