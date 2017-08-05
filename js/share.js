@@ -179,7 +179,9 @@ function mShare(config) {
                 ucShare(this.config);
             } else if (qq && !wx) {
                 qqShare(this.config);
-            }
+            }else{
+				alert("目前只支持uc和QQ原生浏览器");
+			}
         } catch (e) {}
     }
 }
