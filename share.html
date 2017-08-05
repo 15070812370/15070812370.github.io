@@ -44,12 +44,13 @@
     <script type="text/javascript" src="js/NativeShare.js"></script>
     <script>
         var nativeShare = new NativeShare()
+		var img=document.location.protocol + '//' + document.location.host + document.location.pathname +'/img/logo.png'
         var shareData = {
             title: '我的天',
             desc: '发贺卡送给好的咖啡机粉红色的金卡',
             // 如果是微信该link的域名必须要在微信后台配置的安全域名之内的。
             link: 'http://bak.ezhiyang.com/site/ezhiyang/index.html',
-            icon: 'img/logo.png',
+            icon: img,
             // 不要过于依赖以下两个回调，很多浏览器是不支持的
             success: function() {
                 alert('success')
