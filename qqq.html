@@ -8,9 +8,8 @@
   <meta name="description" content="特立独行的人">
 </head>
 <body>
-<div class="soshm" id="share">分享</div>
+<img src="img/weixin_friend.png" id="share"/>
 <script src="js/jquery-2.1.0.min.js"></script>
-<script src="js/soshm.min.js"></script>
 <script>
 var qApiSrc = {
 	lower: "http://3gimg.qq.com/html5/js/qb.js",
@@ -26,13 +25,6 @@ var isucBrowser = (UA.split("UCBrowser/").length > 1) ? bLevel.uc.allow : bLevel
 this.ucAppList = {
     weixin: ['kWeixin', 'WechatFriends', 1, '微信好友']
 };
-soshm('#share', {
-  url: 'window.location.href',
-  title: '国情',
-  digest: '适合中国国情',
-  pic: 'http://ww3.sinaimg.cn/large/68250c36gw1f851iuwa2dj20xc0jg44r.jpg',
-  sites: ['weixin']
-});
 $("#share").bind("click", function() {  
 	if (isucBrowser||isqqBrowser) {
 		 to_app = to_app == '' ? '' : this.ucAppList[to_app][2];
