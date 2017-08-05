@@ -59,7 +59,8 @@
 			};
 			var UA = navigator.appVersion;
 			var isqqBrowser = (UA.split("MQQBrowser/").length > 1) ? bLevel.qq.higher : bLevel.qq.forbid;
-			var isucBrowser = (UA.split("UCBrowser/").le
+			var isucBrowser = (UA.split("UCBrowser/").length > 1) ? bLevel.uc.higher : bLevel.uc.forbid;
+			
 			if (isucBrowser||isqqBrowser) {
 				try {
 					nativeShare.call(command)
