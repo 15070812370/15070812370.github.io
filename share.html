@@ -34,7 +34,7 @@
 		title: '我的天',
 		desc: '发贺卡送给好的咖啡机粉红色的金卡',
 		// 如果是微信该link的域名必须要在微信后台配置的安全域名之内的。
-		link: 'http://bak.ezhiyang.com/site/ezhiyang/index.html',
+		link: window.location.href,
 		icon: img,
 		// 不要过于依赖以下两个回调，很多浏览器是不支持的
 		success: function() {
@@ -48,8 +48,10 @@
 	function call(command) {
 		try {
 			nativeShare.call(command); //需要处理
+			
 		}
 		catch (err) {
+			alert(err.message);
 			// 如果不支持，你可以在这里做降级处理
 			nativeShare.call();
 		}
