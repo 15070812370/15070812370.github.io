@@ -24,7 +24,9 @@ var qq = UA.split('MQQBrowser/').length > 1 ? 2 : 0;
  * 是否是微信
  */
 var wx = /micromessenger/i.test(UA);
-
+if(wx){
+	$(".share").style.visibility="visible";
+}
 /**
  * 浏览器版本
  */
@@ -180,14 +182,51 @@ function mShare(config) {
             } else if (qq && !wx) {
                 qqShare(this.config);
             }else{
-				this.config.type = 0;
-				ucShare(this.config);
 				//alert("目前只支持uc和QQ原生浏览器");
 			}
         } catch (e) {}
     }
 }
-
+function wxConfig(){
+	var appid;
+	var timestamp;
+	var noncestr;
+	var signature;
+	var url=document.location.protocol + '//' + document.location.host + document.location.pathname + document.location.search;
+	$.ajax({
+		 type: "POST",
+		 dataType:"json",
+		 url: "http://bakpr.ezhiyang.com/anon/getWxConfig",
+		 data:{url:url},
+		 success: function(data){
+			 appid=data.appid;
+			 timestamp=data.timestamp;
+			 noncestr=data.noncestr;
+			 signature=data.signature;
+			 init();
+		 }, error: function (jqXHR, textStatus, errorThrown) {
+			 console.log("接口异常");
+		 }
+	})
+}
+function init(){
+	wx.config({
+	   debug: false,// 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。移动端会通过弹窗来提示相关信息。如果分享信息配置不正确的话，可以开了看对应报错信息
+	   appId: appid,
+	   timestamp: timestamp,
+	   nonceStr: noncestr,
+	   signature: signature,
+	   jsApiList: [//需要使用的JS接口列表,分享默认这几个，如果有其他的功能比如图片上传之类的，需要添加对应api进来
+		   'checkJsApi',
+		   'onMenuShareTimeline',
+		   'onMenuShareAppMessage',
+		   'onMenuShareQQ',
+		   'onMenuShareWeibo',
+		   'openLocation',
+		   'getLocation'
+	   ]
+	});
+}
 // 预加载 qq bridge
 loadqqApi(function () {
     qqBridgeLoaded = true;

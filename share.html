@@ -15,17 +15,37 @@
 </style>
 </head>
 <body>
-<button data-mshare="0">点击弹出原生分享面板</button>
-<button data-mshare="1">点击触发朋友圈分享</button>
-<button data-mshare="2">点击触发发送给微信朋友</button>
+<button class="share" data-mshare="2"  style="display:none">发送给微信朋友</button>
 <script src="js/jquery-2.1.0.min.js"></script>
 <script src="js/share.js"></script>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script>
 var img=document.location.protocol + '//' + document.location.host +'/img/logo.png'
+var href=window.location.href;
+var desc='今天你打卡了吗？悄悄告诉你，不到公司也能打卡快来员工帮手打卡吧！';
+var title='用员工帮手考勤';
+window.share_config = {
+     "share": {
+        "imgUrl": img,//分享图。
+        "desc" : desc,//摘要,如果分享到朋友圈的话，不显示摘要。
+        "title" : title,//分享卡片标题
+        "link": href,//分享出去后的链接，这里可以将链接设置为另一个页面。
+        "success":function(){//分享成功后的回调函数
+        },
+        'cancel': function () { 
+            // 用户取消分享后执行的回调函数
+        }
+	  }
+};  
+wx.ready(function () {
+	wx.onMenuShareAppMessage(share_config.share);//分享给好友
+    wx.onMenuShareTimeline(share_config.share);//分享到朋友圈
+    wx.onMenuShareQQ(share_config.share);//分享给手机QQ
+});
 var mshare = new mShare({
-    title: '什么东西',
-    url: 'window.location.href',
-    desc: '我就试试看',
+    title: title,
+    url: href,
+    desc: desc,
     img: img
 });
 $('button').click(function () {
