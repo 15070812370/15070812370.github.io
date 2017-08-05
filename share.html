@@ -24,12 +24,7 @@
 </head>
 <body>
 <div>
-	<button onclick="call()">通用分享</button>
-	<button onclick="call('wechatFriend')">微信好友</button>
-	<button onclick="call('wechatTimeline')">朋友圈</button>
-	<button onclick="call('qqFriend')">QQ</button>
-	<button onclick="call('qZone')">QQ空间</button>
-	<button onclick="call('weibo')">微博</button>
+	<button onclick="call('wechatFriend')">微信分享</button>
 </div>
 <script type="text/javascript" src="js/NativeShare.js"></script>
 <script>
@@ -50,20 +45,13 @@
 		}
 	}
 	nativeShare.setShareData(shareData)
-
 	function call(command) {
 		try {
-			if(command=='wechatFriend'||command=='wechatTimeline'){
-				nativeShare.call(command); //需要处理
-			}else{
-				nativeShare.call(command);
-			}
+			nativeShare.call(command); //需要处理
 		}
 		catch (err) {
 			// 如果不支持，你可以在这里做降级处理
-			if(command=='wechatFriend'||command=='wechatTimeline'){
-				alert(err.message);
-			}
+			nativeShare.call();
 		}
 	}
 </script>
